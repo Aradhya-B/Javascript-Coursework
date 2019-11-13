@@ -1,0 +1,163 @@
+class Shape {
+    constructor(x, y) {
+      let _x;
+      let _y;
+      this.setX = (x) => {
+        if (x >= 0) {
+          _x = x;
+        } else {
+          _x = 0;
+        }
+      }
+      this.setY = (y) => {
+        if (y >= 0) {
+          _y = y;
+        } else {
+          _y = 0;
+        }
+      }
+      this.getX = () => _x;
+      this.getY = () => _y;
+      this.setX(x);
+      this.setY(y);
+      this.showPoint = () => {
+        console.log(`${_x},${_y}`);
+      }
+      
+      // TASK 1
+      // The display info method displays the info of the shape. Both the main point
+      // characterized by x and y, as well as the type of the shape, which is simply
+      // the name of the class, accessed using this.constructor.name
+
+      this.displayInfo = () => {
+          console.log(`${this.constructor.name} with main point at: ${this.getX()},${this.getY()}`)
+      }
+    }
+    createHorizontalOffset(off) {
+      let offSet = "";
+      for (let i = 0; i < (off >= 0? off : this.getX()); i++) {
+        offSet += " ";
+      }
+      return offSet;
+    }
+    draw() {
+      for (let i = 0; i < this.getY(); i++) {
+        console.log(" ");
+      }
+    }
+  }
+
+  class Square extends Shape {
+    constructor(x, y, len) {
+      super(x, y);
+      let _len;
+      this.setLen = (len) => {
+        if (len <= 0) {
+          _len = 1;
+        } else {
+          _len = len;
+        }
+      }
+      this.getLen = () => _len;
+      this.setLen(len);
+      this.draw = () => {
+        super.draw();
+        let line = this.createHorizontalOffset();
+        for (let i = 0; i < len; i++) {
+          line += "*";
+        }
+        for (let i = 0; i < len; i++) {
+          console.log(line);
+        }
+      }
+    }
+  }
+
+  class Triangle extends Shape {
+    constructor(x, y, h) {
+      super(x, y);
+      let _h;
+      this.setH = (h) => {
+        if (h <= 0) {
+          h = 1;
+        } else {
+          _h = h;
+        }
+      }
+      this.getH = () => _h;
+      this.setH(h);
+      this.draw = () => {
+        super.draw();
+        let triangle = "";
+        for (let i = 1; i <= _h; i++) {
+          let line = this.createHorizontalOffset(this.getX()) + this.createHorizontalOffset(_h - i);
+          for (let j = 0; j < ((i * 2) - 1); j++) {
+            line += "*";
+          }
+          line += "\n";
+          triangle += line;
+        }
+        console.log(triangle);
+      }
+    }
+  }
+
+//TASK 2
+
+//The convertToShapes method takes an array of plain objects and returns an array of shape objects
+//based on the properties of each object. If the type of the object is a square, the shapes array
+//to be returned is appended with a new Square object, else if it's a triangle, a new Triangle
+//object, else, if it's not a square or a triangle, a general shape is created and added to the 
+//array.
+
+const convertToShapes = (plainObjects) => {
+    shapes = []
+    plainObjects.forEach(plainObject => {
+        if (plainObject.type == 'Square') {
+            shapes.push(new Square(plainObject.x, plainObject.y, plainObject.length));
+        } else if (plainObject.type == 'Triangle') {
+            shapes.push(new Triangle(plainObject.x, plainObject.y, plainObject.height));
+        } else {
+            shapes.push(new Shape(plainObject.x, plainObject.y));
+        }
+    })
+    return shapes;
+}
+
+let plainObjects = [
+    {x:5,y:6},
+    {type:'Square', x:7,y:10, length:10},
+    {x:8,y:9,type:'Triangle', height:50},
+  ];
+
+
+let shapeObjects = convertToShapes(plainObjects)
+
+//Calling the displayInfo() method for each shape object in the array
+shapeObjects.forEach(shape => {
+    shape.displayInfo();
+})
+
+//TASK 3
+
+//This function transforms an array of plainObjects into an array of shape 
+//objects using the javascript in built Array.prototype.map function. For each
+//object in the array passed, the map function will transform that object using
+//logic implemented by the programmer. In this case, if the plain object has a type 
+//of square, the object is transformed into a new Square object, else if the plain 
+//object has a type of triangle, the plain object is transformed into a new Triangle
+//object, else the object is simple transformed into a general shape object. 
+
+let shapeObjectsWithMap = plainObjects.map(plainObject => {
+    if (plainObject.type == 'Square') {
+        return new Square(plainObject.x, plainObject.y, plainObject.length);
+    } else if (plainObject.type == 'Triangle') {
+        return new Triangle(plainObject.x, plainObject.y, plainObject.height);
+    } else {
+        return new Shape(plainObject.x, plainObject.y);
+    }
+})
+
+shapeObjectsWithMap.forEach(shape => {
+    shape.displayInfo();
+})
