@@ -1,5 +1,3 @@
-(
-    x => {
-        console.log(x + 5);
-    }
-)(10)
+let adder = require('./add');
+
+console.log(adder(6));
